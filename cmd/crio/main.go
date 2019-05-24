@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	goflag "flag"
 	"fmt"
@@ -14,6 +15,7 @@ import (
 	"strings"
 	"time"
 
+	"k8s.io/klog"
 	"github.com/containers/image/types"
 	_ "github.com/containers/libpod/pkg/hooks/0.1.0"
 	"github.com/containers/storage/pkg/reexec"
@@ -537,6 +539,16 @@ func main() {
 			}
 			logrus.SetOutput(f)
 		}
+
+
+	klog.InitFlags(nil)
+	goflag.Set("logtostderr", "true")
+	goflag.Set("alsologtostderr", "true")
+	goflag.Set("alsologtostderr", fmt.Sprintf("%d", level))
+	goflag.Parse()
+
+	buf := new(bytes.Buffer)
+	klog.SetOutput(buf)
 
 		switch c.GlobalString("log-format") {
 		case "text":
